@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "vue.volar",
+        "ritwickdey.liveserver",
+        "formulahendry.auto-close-tag",
+        "formulahendry.auto-rename-tag",
+        "kamikillerto.vscode-colorize",
+        "dbaeumer.vscode-eslint",
+        "eamodio.gitlens",
+        "oderwat.indent-rainbow",
+        "christian-kohler.npm-intellisense",
+        "christian-kohler.path-intellisense",
+        "tabnine.tabnine-vscode"
+    ]
+}
