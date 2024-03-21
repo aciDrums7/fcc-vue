@@ -17,15 +17,17 @@
       [v-cloak] {
         display: none;
       }
+      input {
+        margin: 10px;
+        display: block;
+      }
     </style>
   </head>
 
   <body>
     <!--? `v-cloak shows the DOM only when all elements are rendered ` -->
     <div id="app" v-cloak>
-      {{ greeting }}
-      <!-- ? Two way binding with `v-model` -->
-      <input @keyup.enter="greet(`${greeting} !!!!!!!!!`)" v-model="greeting" />
+      <custom-form />
 
       <hr />
 
@@ -56,6 +58,32 @@
           },
         },
       })
+      //? This is the definition of a custom HTML tag called `custom-form`, with its option object associated
+      app.component('custom-form', {
+        template: `
+        <form @submit.prevent="handleSubmit"> 
+            <h1>{{ title }}</h1>
+            <input type="email" v-model="email"/>  
+            <input type="password" v-model="password" />  
+            <button>Login</button>
+          </form>
+        `,
+        data() {
+          return {
+            title: 'Login Form',
+            email: '',
+            password: '',
+          }
+        },
+        methods: {
+          handleSubmit(e) {
+            // '@submit.prevent' === e.preventDefault(), needed to avoid default page reload
+            // e.preventDefault()
+            console.log(this.email, this.password)
+          },
+        },
+      })
+
       app.mount('#app')
     </script>
   </body>
