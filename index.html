@@ -64,8 +64,13 @@
         template: `
         <form @submit.prevent="handleSubmit"> 
             <h1>{{ title }}</h1>
-            <custom-input v-model="email" v-bind:label="emailLabel"/>  
-            <custom-input v-model="password" :label="passwordLabel" />  
+            <custom-input 
+              v-for="(field, i) in fields" 
+              :key="i"
+              v-model="field.value"
+              :label="field.label"
+              :type="field.type"
+            />  
             <button>Login</button>
           </form>
         `,
@@ -74,17 +79,25 @@
         data() {
           return {
             title: 'Login Form',
-            email: '',
-            password: '',
-            emailLabel: 'Email',
-            passwordLabel: 'Password',
+            fields: [
+              {
+                label: 'Email',
+                value: '',
+                type: 'email',
+              },
+              {
+                label: 'Password',
+                value: '',
+                type: 'password',
+              },
+            ],
           }
         },
         methods: {
           handleSubmit(e) {
             // '@submit.prevent' === e.preventDefault(), needed to avoid default page reload
             // e.preventDefault()
-            console.log(this.email, this.password)
+            console.log(this.fields[0].value, this.fields[1].value)
           },
         },
       })
@@ -93,12 +106,12 @@
         template: `
           <label>
             {{ label }}
-            <input type="text" v-model="inputValue">
+            <input :type="type" v-model="inputValue">
           </label>
         `,
         // All the props passed from the parent compoent using `v-bind`
         // `modelValue` is passed to the child component when the parent defines a `v-model` when calling the child tag
-        props: ['label', 'modelValue'],
+        props: ['label', 'modelValue', 'type'],
         // `computed` allows to define a var as a key, with its own getter and setter
         computed: {
           inputValue: {
@@ -107,7 +120,6 @@
               return this.modelValue
             },
             set(value) {
-              console.log(value)
               // Similar to Angular child emitting an event to pass data to parent
               // `v-model` in the parent automatically listens to this `update` event emitted from its child component
               this.$emit('update:modelValue', value)
