@@ -58,21 +58,26 @@
           },
         },
       })
+
       //? This is the definition of a custom HTML tag called `custom-form`, with its option object associated
       app.component('custom-form', {
         template: `
         <form @submit.prevent="handleSubmit"> 
             <h1>{{ title }}</h1>
-            <input type="email" v-model="email"/>  
-            <input type="password" v-model="password" />  
+            <custom-input v-model="email" v-bind:label="emailLabel"/>  
+            <custom-input v-model="password" :label="passwordLabel" />  
             <button>Login</button>
           </form>
         `,
+        // `v-bind` parses an HTML attribute to JS, so that we can bind the emailLabel to the child component's `label`
+        components: ['custom-input'],
         data() {
           return {
             title: 'Login Form',
             email: '',
             password: '',
+            emailLabel: 'Email',
+            passwordLabel: 'Password',
           }
         },
         methods: {
@@ -84,6 +89,32 @@
         },
       })
 
+      app.component('custom-input', {
+        template: `
+          <label>
+            {{ label }}
+            <input type="text" v-model="inputValue">
+          </label>
+        `,
+        // All the props passed from the parent compoent using `v-bind`
+        // `modelValue` is passed to the child component when the parent defines a `v-model` when calling the child tag
+        props: ['label', 'modelValue'],
+        // `computed` allows to define a var as a key, with its own getter and setter
+        computed: {
+          inputValue: {
+            get() {
+              // Sets the value of `inputValue` to the one returned here, in this case `this.modelValue` === parent v-model binded value
+              return this.modelValue
+            },
+            set(value) {
+              console.log(value)
+              // Similar to Angular child emitting an event to pass data to parent
+              // `v-model` in the parent automatically listens to this `update` event emitted from its child component
+              this.$emit('update:modelValue', value)
+            },
+          },
+        },
+      })
       app.mount('#app')
     </script>
   </body>
